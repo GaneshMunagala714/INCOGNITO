@@ -1,18 +1,8 @@
 # DeadDrop — Confidential Whistleblowing on Chainlink
 
-> ETHGlobal NYC 2026 · Targeting $5,000 in Chainlink prizes
+> ETHGlobal NYC 2026 · Chainlink track
 
 A trustless whistleblowing platform where employee identity is **cryptographically unknowable**. Claims are verified and assessed inside a Chainlink TEE, then attested on-chain — with zero PII ever leaving the enclave.
-
----
-
-## Prize Targets
-
-| Prize | Category | Amount |
-|-------|----------|--------|
-| Best CRE Workflow | Chainlink Runtime Environment | $2,000 |
-| Confidential AI Attester | TEE-based AI inference | $2,000 |
-| Connect the World | Cross-chain deployment | $1,000 |
 
 ---
 
