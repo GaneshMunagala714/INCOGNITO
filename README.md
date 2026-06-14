@@ -146,23 +146,23 @@ Synthesizes all prior agent outputs into the final attested verdict:
 
 ## Chainlink Prize Qualification
 
-### 🤖 Confidential AI Attester ($4,000)
-- ✅ Uses Chainlink Confidential AI inference APIs (confidential-ai-dev-preview.cldev.cloud)
-- ✅ Live inference submitted at ETHGlobal — ID: `019ec2ae-ff69-766b-8eec-7a88540499b7`
-- ✅ Processes: financial documents, identity information, compliance records
-- ✅ Verifiable AI reasoning on-chain for compliance use case
-- ✅ Smart contract consumes attested verdict for routing decisions
+###  Confidential AI Attester ($4,000)
+-  Uses Chainlink Confidential AI inference APIs (confidential-ai-dev-preview.cldev.cloud)
+-  Live inference submitted at ETHGlobal — ID: `019ec2ae-ff69-766b-8eec-7a88540499b7`
+-  Processes: financial documents, identity information, compliance records
+-  Verifiable AI reasoning on-chain for compliance use case
+-  Smart contract consumes attested verdict for routing decisions
 
 ### 🔗 Best CRE Workflow ($2,000)
-- ✅ Integrates blockchain with HR API (Confidential HTTP) + Confidential AI (LLM)
-- ✅ CRE CLI simulation successful — compiled, scanning live Sepolia blocks (block 11054576+)
-- ✅ Binary hash: `d184bdafaa9b92191f9daee11855843e67f3ca96277ab6b91f36accbc50376b8`
-- ✅ Workflow is load-bearing — without it there is no pipeline
+-  Integrates blockchain with HR API (Confidential HTTP) + Confidential AI (LLM)
+-  CRE CLI simulation successful — compiled, scanning live Sepolia blocks (block 11054576+)
+-  Binary hash: `d184bdafaa9b92191f9daee11855843e67f3ca96277ab6b91f36accbc50376b8`
+-  Workflow is load-bearing — without it there is no pipeline
 
 ### 🌎 Connect the World ($1,000)
-- ✅ Smart contract state change on Sepolia via Chainlink
-- ✅ `DeadDropRegistry.sol` emits events based on attested AI verdict
-- ✅ Contract: `0x2aa4206aa0b9d2434fa96c5330c17fc23709f597`
+-  Smart contract state change on Sepolia via Chainlink
+-  `DeadDropRegistry.sol` emits events based on attested AI verdict
+-  Contract: `0x2aa4206aa0b9d2434fa96c5330c17fc23709f597`
 
 ---
 
@@ -335,10 +335,6 @@ Listening for logs starting at block 11054576...
 
 ## Team
 
-**Shruti Brahma** — built solo at ETHGlobal NYC 2026
+**Shruti Brahma** \
+**Ganesh Munagala**
 
-MS Data Science, University of New Haven (May 2026)
-AI Engineer at Vuzix (8 production AR apps, 200+ visually impaired users)
-Research: HazSense, HazDepth (Springer Nature Applied Intelligence)
-
-[shrutibrahma.dev](https://shrutibrahma.dev) · [github.com/shrutibrahma1](https://github.com/shrutibrahma1) · [linkedin.com/in/shrutibrahma](https://linkedin.com/in/shrutibrahma)
