@@ -153,13 +153,13 @@ Synthesizes all prior agent outputs into the final attested verdict:
 -  Verifiable AI reasoning on-chain for compliance use case
 -  Smart contract consumes attested verdict for routing decisions
 
-### 🔗 Best CRE Workflow ($2,000)
+###  Best CRE Workflow ($2,000)
 -  Integrates blockchain with HR API (Confidential HTTP) + Confidential AI (LLM)
 -  CRE CLI simulation successful — compiled, scanning live Sepolia blocks (block 11054576+)
 -  Binary hash: `d184bdafaa9b92191f9daee11855843e67f3ca96277ab6b91f36accbc50376b8`
 -  Workflow is load-bearing — without it there is no pipeline
 
-### 🌎 Connect the World ($1,000)
+###  Connect the World ($1,000)
 -  Smart contract state change on Sepolia via Chainlink
 -  `DeadDropRegistry.sol` emits events based on attested AI verdict
 -  Contract: `0x2aa4206aa0b9d2434fa96c5330c17fc23709f597`
