@@ -110,6 +110,15 @@ interface FinalVerdict {
 // Each call is a separate round-trip to the Chainlink Confidential AI Attester.
 // The TEE signs every response — the chain of 4 calls is fully attested.
 
+type InferenceResponse = {
+	id?: string
+	status?: string
+	output?: string
+}
+
+const POLL_INTERVAL_MS = 5000
+const MAX_POLL_ATTEMPTS = 20
+
 function callConfidentialAI(
 	runtime: Runtime<Config>,
 	systemPrompt: string,
@@ -117,8 +126,9 @@ function callConfidentialAI(
 ): string {
 	const { config } = runtime
 	const http = new cre.capabilities.ConfidentialHTTPClient()
+	const authHeader = { Authorization: { values: [`Bearer ${config.aiApiKey}`] } }
 
-	const resp = http.sendRequest(runtime, {
+	const submitResp = http.sendRequest(runtime, {
 		request: {
 			url: config.aiApiUrl,
 			method: 'POST',
@@ -129,24 +139,68 @@ function callConfidentialAI(
 			}),
 			multiHeaders: {
 				'Content-Type': { values: ['application/json'] },
-				'Authorization': { values: [`Bearer ${config.aiApiKey}`] },
+				...authHeader,
 			},
 		},
 	}).result()
 
-	if (resp.statusCode !== 200) {
+	if (submitResp.statusCode !== 200 && submitResp.statusCode !== 202) {
 		throw new Error(
-			`[INCOGNITO] Confidential AI call failed: HTTP ${resp.statusCode} — ${new TextDecoder().decode(resp.body)}`,
+			`[INCOGNITO] Confidential AI submit failed: HTTP ${submitResp.statusCode} — ${new TextDecoder().decode(submitResp.body)}`,
 		)
 	}
 
-	const body = json(resp) as { output?: string }
-	if (typeof body.output !== 'string') {
-		throw new Error(
-			`[INCOGNITO] Confidential AI response missing "output" field: ${new TextDecoder().decode(resp.body)}`,
-		)
+	let result = json(submitResp) as InferenceResponse
+
+	// The Confidential AI Attester is async: POST returns {id, status: "queued"}.
+	// Poll GET {aiApiUrl}/{id} until status becomes "completed".
+	if (result.status !== 'completed') {
+		if (!result.id) {
+			throw new Error(
+				`[INCOGNITO] Confidential AI response missing "id" for polling: ${new TextDecoder().decode(submitResp.body)}`,
+			)
+		}
+
+		const pollUrl = `${config.aiApiUrl}/${result.id}`
+		runtime.log(`[INCOGNITO]   inference ${result.id} queued, polling for completion...`)
+
+		for (let attempt = 0; attempt < MAX_POLL_ATTEMPTS; attempt++) {
+			runtime.sleep(POLL_INTERVAL_MS)
+
+			const pollResp = http.sendRequest(runtime, {
+				request: {
+					url: pollUrl,
+					method: 'GET',
+					multiHeaders: { ...authHeader },
+				},
+			}).result()
+
+			if (pollResp.statusCode !== 200) {
+				throw new Error(
+					`[INCOGNITO] Confidential AI poll failed: HTTP ${pollResp.statusCode} — ${new TextDecoder().decode(pollResp.body)}`,
+				)
+			}
+
+			result = json(pollResp) as InferenceResponse
+			runtime.log(`[INCOGNITO]   inference ${result.id} status=${result.status} (attempt ${attempt + 1}/${MAX_POLL_ATTEMPTS})`)
+
+			if (result.status === 'completed') break
+			if (result.status === 'failed') {
+				throw new Error(`[INCOGNITO] Confidential AI inference failed: ${new TextDecoder().decode(pollResp.body)}`)
+			}
+		}
+
+		if (result.status !== 'completed') {
+			throw new Error(
+				`[INCOGNITO] Confidential AI inference did not complete after ${(MAX_POLL_ATTEMPTS * POLL_INTERVAL_MS) / 1000}s (last status=${result.status})`,
+			)
+		}
 	}
-	return body.output.replace(/```json[\s\S]*?```|```/g, '').trim()
+
+	if (typeof result.output !== 'string') {
+		throw new Error('[INCOGNITO] Confidential AI response missing "output" field after completion')
+	}
+	return result.output.replace(/```json[\s\S]*?```|```/g, '').trim()
 }
 
 // ── Step 0: Employee verification (Confidential HTTP inside TEE) ──────────────
