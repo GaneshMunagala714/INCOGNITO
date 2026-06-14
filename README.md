@@ -1,160 +1,340 @@
-# DeadDrop — Confidential Whistleblowing on Chainlink
+# DeadDrop
+### Provably Anonymous Whistleblowing — Powered by Chainlink Confidential AI
 
-> ETHGlobal NYC 2026 · Chainlink track
+> *SecureDrop asks you to trust a server. DeadDrop gives you a cryptographic proof before you hit send.*
 
-A trustless whistleblowing platform where employee identity is **cryptographically unknowable**. Claims are verified and assessed inside a Chainlink TEE, then attested on-chain — with zero PII ever leaving the enclave.
+**ETHGlobal New York 2026 · Chainlink Track**
 
 ---
 
-## How It Works
+## The Problem
+
+Every year, billions of dollars in financial fraud go unreported. Not because people don't know — but because they can't prove they're insiders without revealing themselves.
+
+The SEC Whistleblower Program pays 10–30% of sanctions over $1 million to eligible reporters. The requirement: *original information from an independent source*. The bottleneck: whistleblowers cannot prove they're verified insiders without exposing their identity.
+
+Traditional anonymous reporting platforms like SecureDrop solve anonymity through operational security — they ask you to trust a server, a process, a human. That trust is a vulnerability.
+
+**DeadDrop eliminates that trust requirement entirely.**
+
+---
+
+## What DeadDrop Does
+
+DeadDrop is a whistleblowing platform where a verified employee submits a sensitive claim and receives cryptographic proof — before they hit send — that:
+
+1. They are a confirmed insider (employee verification inside TEE)
+2. Their claim was independently assessed by a 6-step AI agent (Confidential AI inside TEE)
+3. Their identity was mathematically stripped — unknowable to anyone
+4. The verdict was posted on-chain and is publicly verifiable by anyone with the tx hash
+
+The whistleblower can hand a regulator a transaction hash. That hash proves a verified insider submitted credible information — without revealing who they are. **This is the first cryptographic infrastructure for whistleblower credibility without identity exposure.**
+
+---
+
+## Why This Only Works With Chainlink
+
+Every component is load-bearing:
+
+| Component | Why It's Required |
+|---|---|
+| **Chainlink TEE** | The AI agent runs inside the enclave — not even Chainlink operators can see the reasoning |
+| **Confidential HTTP** | Employee verification and AI inference both happen inside the enclave — no PII ever exits |
+| **Confidential AI Attester** | The AI verdict is cryptographically signed by the TEE — it cannot be faked or altered |
+| **CRE Workflow** | Orchestrates the full pipeline on a Decentralized Oracle Network — no single point of failure |
+| **On-chain Attestation** | The verdict is immutable public record — anyone can verify the proof |
+
+**Why not AWS Nitro?** AWS TEEs exist but have no native on-chain proof. You'd trust a bridge. With Chainlink, the DON posts the attestation — no single point of trust, no bridge, no intermediary.
+
+---
+
+## Architecture
 
 ```
-Whistleblower submits claim
-        │
-        ▼
-┌─────────────────────────────────────────┐
-│         Chainlink DON (TEE)             │
-│                                         │
-│  1. ConfidentialHTTP → HR API           │
-│     verify employee inside enclave      │
-│                                         │
-│  2. ConfidentialHTTP → AI Attester      │
-│     assess claim at cldev.cloud         │
-│     verdict: credible / severity / route│
-│                                         │
-│  3. Strip identity → UNKNOWABLE         │
-│                                         │
-│  4. EVMClient.writeReport()             │
-│     → DeadDropRegistry on Sepolia       │
-└─────────────────────────────────────────┘
-        │
-        ▼
+Whistleblower submits:
+  • Claim text
+  • Evidence summary  
+  • Employee ID + company email
+  • Years of tenure
+          │
+          ▼
+┌──────────────────────────────────────────────────┐
+│              Chainlink DON (TEE)                  │
+│                                                   │
+│  STEP 1: ConfidentialHTTP → HR API               │
+│    Verify employee_id + email inside enclave      │
+│    Output: { verified: true, role, dept }         │
+│    PII stays inside — never exits                 │
+│                                                   │
+│  STEP 2: ConfidentialHTTP → Confidential AI      │
+│    6-step NLP agent pipeline:                     │
+│    ├── Entity extraction (people, orgs, amounts)  │
+│    ├── Evidence cross-reference + scoring 1-10    │
+│    ├── Regulatory classification (SEC/OSHA/OSC)   │
+│    ├── Insider access validation                  │
+│    ├── Protected disclosure assessment            │
+│    └── SEC award eligibility (10-30% on >$1M)    │
+│    Output: structured attested verdict            │
+│                                                   │
+│  STEP 3: Strip all identity                       │
+│    employee_id  → PURGED                          │
+│    company_email → PURGED                         │
+│    identity     → "UNKNOWABLE"                    │
+│                                                   │
+│  STEP 4: EVMClient.writeReport()                 │
+│    → DeadDropRegistry.sol on Sepolia              │
+└──────────────────────────────────────────────────┘
+          │
+          ▼
 DeadDropRegistry.sol emits:
-  InternalReport   (severity 1-2) → board
-  PublicDisclosure (severity 3)   → regulators / media
+  InternalReport   (severity 1–2) → board / legal
+  PublicDisclosure (severity 3)   → regulators / media / SEC
+          │
+          ▼
+Whistleblower receives:
+  • On-chain tx hash
+  • Etherscan link (publicly verifiable by anyone)
+  • "Your identity is cryptographically unknowable"
 ```
 
 ---
 
-## Repository Structure
+## The 6-Step AI Agent Pipeline
+
+All 6 steps execute inside the Chainlink TEE via Confidential AI. The reasoning is cryptographically attested — no one can view or alter it.
+
+### Step 1: Entity Extraction (NLP)
+Parses the raw claim text and extracts:
+- **People** — names, roles, titles
+- **Organizations** — companies, subsidiaries, shell entities, vendors
+- **Financial Amounts** — exact figures, currencies, transaction values
+- **Dates & Timeframes** — when events occurred
+- **Documents & Systems** — records, databases, policies referenced
+
+### Step 2: Evidence Cross-Reference
+Each evidence item scored 1–10 for specificity, verifiability, and corroboration with extracted entities.
+
+### Step 3: Regulatory Classification
+Maps to applicable U.S. regulatory framework:
+- `FINANCIAL_FRAUD` — invoice manipulation, embezzlement, false reporting
+- `SECURITIES_VIOLATION` — insider trading, false SEC disclosures
+- `WORKPLACE_SAFETY` — OSHA violations
+- `CORRUPTION` — bribery, kickbacks, conflicts of interest
+- `DATA_PRIVACY` — unauthorized access or sharing
+
+### Step 4: Insider Access Validation
+Does this employee's role give plausible access to the information described? Would an external party have this level of detail?
+
+### Step 5: Protected Disclosure Assessment
+- Is this specific enough to constitute a protected disclosure?
+- **SEC Whistleblower Program**: Does this qualify for 10–30% award on sanctions over $1M?
+- Which agencies should receive the referral?
+
+### Step 6: Attested Verdict (on-chain)
+```json
+{
+  "credible": true,
+  "severity": 3,
+  "violation_type": "FINANCIAL_FRAUD",
+  "reason": "Verified Finance Engineer submitted specific corroborated claim of $4.2M invoice fraud with unregistered vendor",
+  "route": "public",
+  "protected_disclosure": true,
+  "sec_award_eligible": true,
+  "recommended_agencies": ["SEC", "DOJ", "FBI"],
+  "identity": "UNKNOWABLE"
+}
+```
+
+---
+
+## Chainlink Prize Qualification
+
+### 🤖 Confidential AI Attester ($4,000)
+- ✅ Uses Chainlink Confidential AI inference APIs (confidential-ai-dev-preview.cldev.cloud)
+- ✅ Live inference submitted at ETHGlobal — ID: `019ec2ae-ff69-766b-8eec-7a88540499b7`
+- ✅ Processes: financial documents, identity information, compliance records
+- ✅ Verifiable AI reasoning on-chain for compliance use case
+- ✅ Smart contract consumes attested verdict for routing decisions
+
+### 🔗 Best CRE Workflow ($2,000)
+- ✅ Integrates blockchain with HR API (Confidential HTTP) + Confidential AI (LLM)
+- ✅ CRE CLI simulation successful — compiled, scanning live Sepolia blocks (block 11054576+)
+- ✅ Binary hash: `d184bdafaa9b92191f9daee11855843e67f3ca96277ab6b91f36accbc50376b8`
+- ✅ Workflow is load-bearing — without it there is no pipeline
+
+### 🌎 Connect the World ($1,000)
+- ✅ Smart contract state change on Sepolia via Chainlink
+- ✅ `DeadDropRegistry.sol` emits events based on attested AI verdict
+- ✅ Contract: `0x2aa4206aa0b9d2434fa96c5330c17fc23709f597`
+
+---
+
+## Confidential AI — Live Proof
+
+First inference at ETHGlobal NYC 2026:
 
 ```
-DeadDrop/
-├── workflow/                    # Chainlink CRE Workflow (main prize entry)
-│   ├── workflow.ts              # 3-step: verify → AI assess → on-chain write
-│   ├── main.ts                  # CRE Runner entrypoint
-│   ├── workflow.yaml            # CRE CLI config
-│   └── config.staging.json      # Staging config (Sepolia)
-│
-├── contracts/
-│   └── DeadDropRegistry.sol     # Deployed on Sepolia — receives CRE reports
-│
-├── backend/
-│   ├── index.js                 # Express API (fallback submission path)
-│   └── mock-hr.js               # Mock HR verification server
-│
-├── frontend/
-│   └── index.html               # Whistleblower submission UI
-│
-└── cre-workflow/                # Standalone CRE workflow (alternate entry)
-    └── workflow.ts
+Inference ID: 019ec2ae-ff69-766b-8eec-7a88540499b7
+Model: qwen3.6 (256K context, 34.4GB)
+Status: completed
+Prompt tokens: 194 | Completion tokens: 1392
+
+Output:
+{
+  "credible": true,
+  "severity": 3,
+  "reason": "The claim provides specific, quantifiable financial details and
+             corroborating evidence of an unregistered vendor that strongly
+             indicate credible fraud.",
+  "route": "internal"
+}
 ```
+
+Processed inside Chainlink TEE. Cryptographically attested. Identity unknowable.
 
 ---
 
 ## Smart Contract
 
-**DeadDropRegistry** deployed on Sepolia:
+**DeadDropRegistry** — Sepolia:
 ```
 0x2aa4206aa0b9d2434fa96c5330c17fc23709f597
 ```
-[View on Etherscan](https://sepolia.etherscan.io/address/0x2aa4206aa0b9d2434fa96c5330c17fc23709f597)
+Verified on Sourcify ✓ | Verified on Blockscout ✓
 
-Implements `IReceiver` — receives signed reports from the Chainlink DON via `onReport(bytes metadata, bytes report)`.
+Implements `IReceiver` — receives signed reports from Chainlink DON:
+
+```solidity
+function submitAttestation(
+    bool credible,
+    uint8 severity,      // 1=minor 2=serious 3=critical
+    string route,        // "internal" or "public"
+    string reason,       // AI verdict sentence
+    uint256 timestamp
+) external
+
+// require(credible) — junk claims rejected at contract level
+// severity 1-2 → emit InternalReport → board/legal
+// severity 3   → emit PublicDisclosure → regulators/media
+```
+
+Deployment tx: `0x798dd81ba4e08982973287d145bcad5e426440c56e3ffae8d2fc29ce0a4cc61e`
 
 ---
 
 ## CRE Workflow
 
-The core of the project lives in `workflow/workflow.ts`.
+Core pipeline using `@chainlink/cre-sdk`:
 
-**Step 1 — Employee Verification (inside TEE)**
 ```typescript
+// Step 1: Confidential HTTP — employee verification inside TEE
 const confidentialHttp = new cre.capabilities.ConfidentialHTTPClient()
-// POST to HR API — employee identity stays inside the enclave
-```
+const verification = confidentialHttp.sendRequest(runtime, {
+  request: { url: config.hr_api_url, method: 'POST', bodyString: ... }
+}).result()
 
-**Step 2 — Confidential AI Attester**
-```typescript
-// POST to confidential-ai-dev-preview.cldev.cloud
-// AI assesses claim severity inside TEE — cryptographically attested
-```
+// Step 2: Confidential AI — 6-step agent assessment inside TEE
+const verdict = confidentialHttp.sendRequest(runtime, {
+  request: { url: 'confidential-ai-dev-preview.cldev.cloud/v1/inference', ... }
+}).result()
 
-**Step 3 — On-chain Write**
-```typescript
+// Step 3: Strip identity — only verdict exits enclave
+const output = { ...verdict, identity: 'UNKNOWABLE' }
+
+// Step 4: Write to chain
 const encodedPayload = encodeAbiParameters([...], [credible, severity, route, reason, timestamp])
-const report = runtime.report(prepareReportRequest(encodedPayload)).result()
 evmClient.writeReport(runtime, { receiver: registryAddress, report })
 ```
 
-### Simulate locally
+---
 
-```bash
-# Install CRE CLI (binary)
-# Download from github.com/smartcontractkit/cre — place in ~/bin/cre
+## Real-World Impact
 
-cd workflow
-npm install
+The SEC Whistleblower Program has paid over **$1.9 billion** in awards since 2011. The average award is $5.4 million. The barrier is always the same: credibility without identity exposure.
 
-CRE_API_KEY=your_key ~/bin/cre workflow simulate . 
-```
+DeadDrop attestations could:
+- Accompany SEC filings as cryptographic proof of insider status
+- Serve as evidence in OSHA retaliation cases
+- Enable anonymous proof-of-insider for financial regulators globally
+- Power compliance infrastructure for enterprise whistleblower programs
+
+**This is not a privacy tool. This is infrastructure for the next generation of financial enforcement.**
 
 ---
 
-## Backend
+## Running Locally
+
+### Backend (3 terminals)
 
 ```bash
-cd backend
-npm install
+# Terminal 1 — Mock HR verification
+cd backend && npm install && node mock-hr.js
+# → http://localhost:3002
 
-# Start mock HR server
-node mock-hr.js        # runs on :3002
+# Terminal 2 — Main API
+cd backend && node index.js  
+# → http://localhost:3001
 
-# Start API server  
-node index.js          # runs on :3001
+# Terminal 3 — Frontend
+cd frontend && npx serve .
+# → http://localhost:3000
 ```
 
-**Test submission:**
+### CRE Simulation
+
 ```bash
-curl -X POST http://localhost:3001/submit \
-  -H "Content-Type: application/json" \
-  -d '{
-    "claim": "My manager approved fraudulent invoices",
-    "employee_id": "EMP-4821",
-    "company_email": "test@acmecorp.com"
-  }'
+cd cre-workflow/deaddrop
+cre login
+bun install --cwd ./my-workflow
+cre workflow simulate my-workflow
+# Select: staging-settings
 ```
 
----
-
-## Frontend
-
-Open `frontend/index.html` directly in a browser — no build step needed.
+Expected:
+```
+✓ Workflow compiled
+✓ Simulation limits enabled
+Binary hash: d184bdafaa9b92191f9daee11855843e67f3ca96277ab6b91f36accbc50376b8
+Chain: ethereum-testnet-sepolia
+Contract: 0x2AA4206Aa0B9d2434fa96c5330C17fc23709f597
+Listening for logs starting at block 11054576...
+```
 
 ---
 
 ## Tech Stack
 
-- **Chainlink CRE SDK** `@chainlink/cre-sdk` — workflow orchestration
-- **Chainlink Confidential AI** `confidential-ai-dev-preview.cldev.cloud` — TEE inference
-- **Solidity 0.8.19** — DeadDropRegistry with IReceiver
-- **viem** — ABI encoding for on-chain report payload
-- **zod** — runtime config validation
-- **Express.js** — backend API
-- **Sepolia** — testnet deployment
+| Layer | Technology |
+|---|---|
+| TEE Orchestration | Chainlink CRE SDK `@chainlink/cre-sdk@1.11.0` |
+| Confidential AI | Chainlink Confidential AI Attester (cldev.cloud) |
+| Smart Contract | Solidity 0.8.19 — DeadDropRegistry + IReceiver |
+| ABI Encoding | viem |
+| Config Validation | zod |
+| Backend | Node.js 24 + Express |
+| Network | Ethereum Sepolia (Chain ID 11155111) |
+
+---
+
+## Build Timeline
+
+| Milestone | Achievement |
+|---|---|
+| Concept pitch | Chainlink team engaged, API key received, Confidential AI feedback given |
+| First inference | ID `019ec2ae` — clean JSON verdict from inside TEE |
+| Contract deployed | `0x2aa4...f597` on Sepolia — verified Sourcify + Blockscout |
+| CRE simulation live | Compiled, scanning block 11054576+ on Sepolia |
+| 6-step NLP agent | Entity extraction, evidence scoring, SEC award assessment |
+| Full demo working | Form → TEE → verdict → on-chain → Etherscan |
 
 ---
 
 ## Team
 
-Built at ETHGlobal NYC 2026
+**Shruti Brahma** — built solo at ETHGlobal NYC 2026
+
+MS Data Science, University of New Haven (May 2026)
+AI Engineer at Vuzix (8 production AR apps, 200+ visually impaired users)
+Research: HazSense, HazDepth (Springer Nature Applied Intelligence)
+
+[shrutibrahma.dev](https://shrutibrahma.dev) · [github.com/shrutibrahma1](https://github.com/shrutibrahma1) · [linkedin.com/in/shrutibrahma](https://linkedin.com/in/shrutibrahma)
