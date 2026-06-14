@@ -1,5 +1,5 @@
 # INCOGNITO
-### Provably Anonymous Whistleblowing — Powered by Chainlink Confidential AI
+### Provably Anonymous Whistleblowing  Powered by Chainlink Confidential AI
 
 > *SecureDrop asks you to trust a server. DeadDrop gives you a cryptographic proof before you hit send.*
 
@@ -34,7 +34,7 @@ The whistleblower can hand a regulator a transaction hash. That hash proves a ve
 
 ## Why This Only Works With Chainlink
 
-Every component is load-bearing:
+Every component is load bearing:
 
 | Component | Why It's Required |
 |---|---|
@@ -44,7 +44,7 @@ Every component is load-bearing:
 | **CRE Workflow** | Orchestrates the full pipeline on a Decentralized Oracle Network — no single point of failure |
 | **On-chain Attestation** | The verdict is immutable public record — anyone can verify the proof |
 
-**Why not AWS Nitro?** AWS TEEs exist but have no native on-chain proof. You'd trust a bridge. With Chainlink, the DON posts the attestation — no single point of trust, no bridge, no intermediary.
+**Why not AWS Nitro?** AWS TEEs exist but have no native on-chain proof. You'd trust a bridge. With Chainlink, the DON posts the attestation  no single point of trust, no bridge, no intermediary.
 
 ---
 
@@ -328,7 +328,7 @@ Listening for logs starting at block 11054576...
 
 ## Docs
 
-- [Architecture Spec](docs/ARCHITECTURE_SPEC.md) — full node/data-flow breakdown for diagramming
+- [Architecture Spec](docs/ARCHITECTURE_SPEC.md) - full node/data-flow breakdown for diagramming
 - [Demo Script](docs/DEMO_SCRIPT.md) — screen recording walkthrough
 
 ---
