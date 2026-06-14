@@ -19,7 +19,7 @@ Traditional anonymous reporting platforms like SecureDrop solve anonymity throug
 
 ---
 
-## What DeadDrop Does
+## What INCOGNITO Does
 
 DeadDrop is a whistleblowing platform where a verified employee submits a sensitive claim and receives cryptographic proof — before they hit send — that:
 
@@ -193,7 +193,7 @@ Processed inside Chainlink TEE. Cryptographically attested. Identity unknowable.
 
 ## Smart Contract
 
-**DeadDropRegistry** — Sepolia:
+**INCOGNITORegistry** — Sepolia:
 ```
 0x2aa4206aa0b9d2434fa96c5330c17fc23709f597
 ```
@@ -305,7 +305,7 @@ Listening for logs starting at block 11054576...
 |---|---|
 | TEE Orchestration | Chainlink CRE SDK `@chainlink/cre-sdk@1.11.0` |
 | Confidential AI | Chainlink Confidential AI Attester (cldev.cloud) |
-| Smart Contract | Solidity 0.8.19 — DeadDropRegistry + IReceiver |
+| Smart Contract | Solidity 0.8.19 — INCOGNITORegistry + IReceiver |
 | ABI Encoding | viem |
 | Config Validation | zod |
 | Backend | Node.js 24 + Express |
