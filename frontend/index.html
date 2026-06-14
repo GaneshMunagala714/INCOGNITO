@@ -87,11 +87,11 @@ hr.div{border:none;border-top:1px solid var(--b1);}
 .submit-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
 .form-panel{background:var(--card);border:1px solid var(--b1);border-radius:12px;padding:28px;}
 .field{margin-bottom:16px;}
-.field label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.field label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#dc2626;margin-bottom:8px;font-weight:600;}
 .field input,.field textarea{width:100%;background:var(--s1);border:1px solid var(--b1);border-radius:7px;padding:11px 14px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;transition:border-color .15s,box-shadow .15s;}
 .field textarea{height:110px;resize:vertical;line-height:1.7;}
 .field input:focus,.field textarea:focus{border-color:var(--gborder);box-shadow:0 0 0 3px var(--glow);}
-.field input::placeholder,.field textarea::placeholder{color:var(--dim);}
+.field input::placeholder,.field textarea::placeholder{color:#94a3b8;}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
 /* ── LEDGER BAR ── */
@@ -108,7 +108,7 @@ hr.div{border:none;border-top:1px solid var(--b1);}
 .btn-ledger:hover:not(:disabled){border-color:var(--gborder);color:var(--green);}
 .btn-ledger:disabled{opacity:.35;cursor:not-allowed;}
 .btn-ledger.ok{border-color:var(--gborder);color:var(--green);}
-.form-note{font-size:11px;color:var(--dim);line-height:1.65;margin-bottom:14px;}
+.form-note{font-size:11px;color:#475569;line-height:1.65;margin-bottom:14px;}
 .err{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:7px;padding:10px 14px;font-size:12px;color:var(--red);margin-bottom:12px;display:none;}
 .err.on{display:block;}
 .btn-submit{display:block;width:100%;background:var(--green);color:#fff;border:none;border-radius:8px;padding:14px;font-size:14px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:background .15s,transform .12s;}
@@ -123,7 +123,7 @@ hr.div{border:none;border-top:1px solid var(--b1);}
 .tb-title{font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:8px;flex:1;}
 .tb-status{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,.04);border:1px solid var(--b1);color:var(--dim);}
 .tb-status.running{background:var(--gt);border-color:var(--gborder);color:var(--green);}
-.terminal,.term-idle{padding:20px;font-family:var(--mono);font-size:11.5px;line-height:1.9;color:var(--dim);background:#010304;min-height:340px;max-height:560px;overflow-y:auto;}
+.terminal,.term-idle{padding:20px;font-family:var(--mono);font-size:11.5px;line-height:1.9;color:#cbd5e1;background:#010304;min-height:340px;max-height:560px;overflow-y:auto;}
 .terminal::-webkit-scrollbar{width:3px;}.terminal::-webkit-scrollbar-thumb{background:var(--b2);}
 .tl{display:block;}
 .tl-hdr{color:var(--green);font-weight:600;}
@@ -345,7 +345,7 @@ footer{border-top:1px solid var(--b1);margin-top:40px;}
         <span class="tb-status" id="term-status">IDLE</span>
       </div>
       <div class="term-idle" id="term-idle">
-        <span style="color:var(--muted)">$ awaiting submission<span class="cursor"></span></span>
+        <span style="color:#e2e8f0">awaiting submission<span class="cursor"></span></span>
       </div>
       <div class="terminal" id="terminal" style="display:none;"><span class="cursor"></span></div>
     </div>
