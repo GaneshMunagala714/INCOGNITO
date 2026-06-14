@@ -1,7 +1,7 @@
 # INCOGNITO
 ### Provably Anonymous Whistleblowing  Powered by Chainlink Confidential AI
 
-> *SecureDrop asks you to trust a server. DeadDrop gives you a cryptographic proof before you hit send.*
+> *SecureDrop asks you to trust a server. INCOGNITO gives you a cryptographic proof before you hit send.*
 
 **ETHGlobal New York 2026 · Chainlink Track**
 
