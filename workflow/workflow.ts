@@ -134,7 +134,18 @@ function callConfidentialAI(
 		},
 	}).result()
 
-	const body = json(resp) as { output: string }
+	if (resp.statusCode !== 200) {
+		throw new Error(
+			`[INCOGNITO] Confidential AI call failed: HTTP ${resp.statusCode} — ${new TextDecoder().decode(resp.body)}`,
+		)
+	}
+
+	const body = json(resp) as { output?: string }
+	if (typeof body.output !== 'string') {
+		throw new Error(
+			`[INCOGNITO] Confidential AI response missing "output" field: ${new TextDecoder().decode(resp.body)}`,
+		)
+	}
 	return body.output.replace(/```json[\s\S]*?```|```/g, '').trim()
 }
 
