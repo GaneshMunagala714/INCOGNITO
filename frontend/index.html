@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DeadDrop — Provably Anonymous Whistleblowing</title>
+<title>INCOGNITO — Provably Anonymous Whistleblowing</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
@@ -228,14 +228,14 @@ nav {
 <body>
 
 <nav>
-  <div class="nav-logo"><div class="nav-dot"></div>DeadDrop</div>
+  <div class="nav-logo"><div class="nav-dot"></div>INCOGNITO</div>
   <span class="nav-badge">Powered by Chainlink TEE</span>
 </nav>
 
 <div class="hero">
   <div class="hero-pill">🔒 Cryptographically Anonymous</div>
   <h1>Speak truth.<br /><em>Without sacrifice.</em></h1>
-  <p>DeadDrop runs your claim through a 4-agent AI pipeline inside a Chainlink Trusted Execution Environment. Your identity is mathematically unknowable — even to us.</p>
+  <p>INCOGNITO runs your claim through a 4-agent AI pipeline inside a Chainlink Trusted Execution Environment. Your identity is mathematically unknowable — even to us.</p>
   <div class="hero-stats">
     <div class="stat-item"><div class="stat-val">TEE</div><div class="stat-lbl">Trusted Execution</div></div>
     <div class="stat-item"><div class="stat-val">4</div><div class="stat-lbl">Specialist Agents</div></div>
@@ -427,7 +427,7 @@ async function handleSubmit() {
     body: JSON.stringify({claim, evidence_summary:evidence, employee_proof:{employee_id:empId, company_email:email, tenure_years:tenure}})
   }).then(r=>r.json().then(d=>({ok:r.ok,data:d})));
 
-  await addLine('◆ DEADDROP  AGENTIC PIPELINE  v2.0','hdr');
+  await addLine('◆ INCOGNITO  AGENTIC PIPELINE  v2.0','hdr');
   await addLine('  Chainlink Confidential Runtime Environment','dim',80);
   await addLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━','div',80);
   await addLine('','blank',60);
@@ -502,7 +502,7 @@ async function handleSubmit() {
   await addLine(`  ✓  TX:          ${stx||'(simulated)'}`,'ok',200);
   await addLine('  ✓  Network:     Ethereum Sepolia Testnet','ok',140);
   await addLine('','blank',80);
-  await addLine('◆ PIPELINE COMPLETE  ·  4 agents  ·  1 attestation  ·  0 identity','hdr',180);
+  await addLine('◆ INCOGNITO PIPELINE COMPLETE  ·  4 agents  ·  1 attestation  ·  0 identity','hdr',180);
   await sleep(900);
 
   renderResult(res);
